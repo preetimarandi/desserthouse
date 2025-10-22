@@ -1,0 +1,187 @@
+@font-face {
+    font-family: 'comic_zine_otregular';
+    src: url('../fonts/comic_zine_ot-webfont.woff') format('woff'),
+         url('../fonts/comic_zine_ot-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'action_man_shadedregular';
+    src: url('../fonts/Action_Man_Shaded-webfont.woff') format('woff'),
+         url('../fonts/Action_Man_Shaded-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: '3dumbregular';
+    src: url('../fonts/3Dumb-webfont.woff') format('woff'),
+         url('../fonts/3Dumb-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'eraserregular';
+    src: url('../fonts/EraserRegular-webfont.woff') format('woff'),
+        url('../fonts/EraserRegular-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header {
+    background-color: #ffc300;
+    padding: 20px;
+}
+
+.logo {
+    font-family: 'action_man_shadedregular';
+    font-size: 70px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.logo a{
+    text-decoration: none;
+    color: #000;
+}
+
+.nav-bar {
+    text-align: center;
+}
+
+.nav-link {
+    margin: 0 10px;
+}
+
+.hero {
+    text-align: center;
+    padding: 150px 20px;
+    background-image: url(../asset/top-view-delicious-pastry-concept.jpg);
+    background-size: cover;
+    color: #000;
+    font-family: 'comic_zine_otregular';
+
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+.hero h1 {
+    font-size: 80px;
+    font-family: 'comic_zine_otregular';
+}
+
+.hero p {
+    font-size: 40px;
+}
+
+.menu p, .about p, .contact p {
+    font-size: 25px;
+}
+
+.btn {
+    background-color: #3e2723;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.menu, .about {
+    padding: 25px 20px;
+}
+
+.menu h2, .about h2, .contact h2 {
+    margin-bottom: 30px;
+    text-align: center;
+    font-family: '3dumbregular';
+    font-size: 55px;
+}
+
+.menu-area {
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.menu-item {
+    margin: 20px 0;
+}
+
+.about-area {
+    width: 80%;
+}
+
+.about {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.alert-heading {
+    font-family: 'eraserregular';
+}
+
+.contact-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contact-area p {
+    text-align: center;
+}
+
+.social {
+    width: 70%;
+    display: flex;
+    justify-content: center;
+}
+
+.social a {
+    margin: 10px 40px;
+
+}
+
+footer {
+    background-color: #3e2723;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+}
+
+@media only screen and (max-width: 700px) {
+    .hero h1 {
+        font-size: 70px;
+    }
+
+    .nav-tabs {
+        flex-direction: column;
+    }
+
+    .nav-item {
+        margin-bottom: 10px;
+    }
+    .menu-area {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .social {
+        flex-direction: column;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    .menu-area {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
