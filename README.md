@@ -31,10 +31,13 @@ css/
 js/
   main.js          # all behaviour + the contact-details config
 asset/             # bakery photographs (.webp with a .jpg fallback)
+  og/              # 1200x630 social-preview images (see "Link previews" below)
 fonts/             # bundled webfonts (Bungee, Alfa Slab One, Nunito, Space Mono)
 tools/
-  check_site.py     # static markup sanity check (no dependencies)
+  check_site.py     # static markup + link-preview sanity check (no dependencies)
   browser_test.js   # live headless-Chrome test of the main.js behaviours
+  og-template.html  # the social-preview card, as an HTML page
+  make_og_images.js # renders og-template.html to asset/og/*.jpg
 ```
 
 The old Bootstrap CSS was removed in this redesign — the theme is hand-written CSS.
@@ -44,8 +47,9 @@ The old Bootstrap CSS was removed in this redesign — the theme is hand-written
 Two small test scripts live in `tools/`.
 
 `check_site.py` parses every HTML file and fails on unbalanced tags, markup
-accidentally trapped inside a comment, a missing script tag, or leftover
-bottom-navigation markup. It needs nothing but Python 3.
+accidentally trapped inside a comment, a missing script tag, leftover
+bottom-navigation markup, or a broken set of link-preview tags (see
+"Link previews" below). It needs nothing but Python 3.
 
 ```bash
 python3 tools/check_site.py
@@ -66,6 +70,66 @@ node tools/browser_test.js
 > The markup-trapped-in-a-comment check exists because that exact bug used to
 > stop `js/main.js` from loading on four of the five pages, which silently killed
 > the contact form, the order bag and the mobile menu.
+
+## Link previews (Facebook, X, WhatsApp, LinkedIn, iMessage)
+
+When someone pastes a `https://preetimarandi.github.io/desserthouse/` link into a
+post, a story or a chat, the platform fetches the HTML and reads a block of
+`<meta>` tags out of the `<head>` to build the rich card. Each page carries:
+
+| Tag | Why it is there |
+| --- | --- |
+| `<link rel="canonical">` | the page's one true address |
+| `og:url`, `og:title`, `og:description` | what gets printed on the card |
+| `og:image` + `:type` `:width` `:height` `:alt` | the picture, and its size so the platform can lay the card out before the image loads |
+| `og:site_name`, `og:locale`, `og:type` | the byline above the title |
+| `twitter:card` = `summary_large_image` | tells X to use the big layout |
+
+Two rules are worth knowing, because both fail *silently*:
+
+1. **`og:image` and `og:url` must be absolute `https://` URLs.** A relative path
+   like `asset/og/og-home.jpg` is simply ignored — the card renders as a bare
+   blue link. Every URL in the `<head>` is therefore spelled out in full.
+2. **The image has to be reachable without JavaScript** and reasonably small.
+   The files in `asset/og/` are 1200x630 JPEGs, 85–175 KB each.
+
+There are four images for five pages, because Terms and Privacy share one:
+
+| File | Used by |
+| --- | --- |
+| `asset/og/og-home.jpg` | `index.html` |
+| `asset/og/og-about.jpg` | `about.html` |
+| `asset/og/og-contact.jpg` | `contact.html` |
+| `asset/og/og-legal.jpg` | `terms.html`, `privacy.html` |
+
+### Changing a preview image
+
+The images are generated, not hand-drawn. `tools/og-template.html` is a normal
+HTML page holding the card layout — it links the site's real webfonts and
+reuses the `css/style.css` palette, so the card is typeset in Bungee and Space
+Mono exactly like the site. `tools/make_og_images.js` renders it in headless
+Chrome and screenshots it to JPEG:
+
+```bash
+node tools/make_og_images.js   # needs Node 18+ and a Chrome/Chromium install
+```
+
+It starts its own static server, so there is no Python step. To restyle a card,
+edit the CSS or the `VARIANTS` block in `og-template.html` and re-run. The
+generated JPEGs are committed, so a visitor never needs this script — it is only
+for when the wording or the artwork changes.
+
+> ⚠️ **Moving the site:** the absolute URLs and `SITE_ORIGIN` in
+> `tools/check_site.py` both hard-code `preetimarandi.github.io`. If the site
+> ever moves to a real domain, search-and-replace that string across the five
+> HTML files and the checker, then re-run `python3 tools/check_site.py`.
+
+> ⚠️ **Previews are cached hard.** Facebook, X and LinkedIn each cache by URL
+> for days, so a corrected image will not show up on links people have already
+> posted. Re-scrape with the
+> [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/)
+> or the [Card validator](https://cards-dev.twitter.com/validator), or append a
+> `?v=2` query to the page URL to bust the cache while testing.
 
 ## Changing the contact details
 

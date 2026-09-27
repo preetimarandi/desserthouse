@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OG card template</title>
+<!--
+  Social-preview card template for Dessert House.
+
+  Rendered at exactly 1200x630 (the Open Graph "large" size every platform
+  understands) and screenshotted to JPEG by tools/make_og_images.js. It links
+  the site's real webfonts and reuses the css/style.css palette, so the preview
+  card is the same brand as the page it links to.
+
+  The variant is chosen by the ?v= query string -- see VARIANTS in
+  tools/make_og_images.js. This file is never served to visitors.
+-->
+<style>
+    @font-face { font-family: 'Bungee';        src: url('../fonts/bungee-400-latin.woff2') format('woff2'); font-weight: 400; font-display: block; }
+    @font-face { font-family: 'Alfa Slab One'; src: url('../fonts/alfa-slab-one-400-latin.woff2') format('woff2'); font-weight: 400; font-display: block; }
+    @font-face { font-family: 'Nunito';        src: url('../fonts/nunito-var-latin.woff2') format('woff2'); font-weight: 400 700; font-display: block; }
+    @font-face { font-family: 'Space Mono';    src: url('../fonts/space-mono-400-latin.woff2') format('woff2'); font-weight: 400; font-display: block; }
+    @font-face { font-family: 'Space Mono';    src: url('../fonts/space-mono-700-latin.woff2') format('woff2'); font-weight: 700; font-display: block; }
+
+    :root {
+        --cream: #fff4e1; --choco: #3a2218; --mustard: #f2b33d;
+        --tomato: #e0543a; --teal: #1c7a72; --mint: #a6d9c7;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+        width: 1200px; height: 630px; overflow: hidden;
+        background: var(--choco);
+        font-family: 'Nunito', system-ui, sans-serif;
+        color: var(--choco);
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .card {
+        position: relative;
+        width: 1200px; height: 630px;
+        display: grid;
+        grid-template-columns: 648px 1fr;
+        background: var(--cream);
+        border: 6px solid var(--choco);
+    }
+
+    /* Halftone dot field, the same paper texture the site uses. */
+    .panel {
+        position: relative;
+        padding: 46px 44px 0;
+        display: flex; flex-direction: column;
+    }
+    .panel::before {
+        content: ''; position: absolute; inset: 0;
+        background-image: radial-gradient(var(--choco) 1.6px, transparent 1.7px);
+        background-size: 15px 15px;
+        opacity: .07;
+        pointer-events: none;
+    }
+    .panel > * { position: relative; }
+
+    .brand { display: flex; align-items: center; gap: 13px; }
+    .brand__mark {
+        width: 52px; height: 52px; flex: none;
+        display: grid; place-items: center;
+        font-size: 27px; line-height: 1;
+        background: var(--mustard);
+        border: 3px solid var(--choco);
+        border-radius: 13px;
+        box-shadow: 4px 4px 0 var(--choco);
+    }
+    .brand__name {
+        display: block;
+        font-family: 'Bungee', 'Arial Black', sans-serif;
+        font-size: 25px;
+    }
+    .brand__sub {
+        display: block; margin-top: 3px;
+        font-family: 'Space Mono', monospace;
+        font-size: 12px; letter-spacing: .2em; text-transform: uppercase;
+        opacity: .72;
+    }
+    .eyebrow {
+        margin-top: 40px;
+        display: inline-flex; align-items: center; gap: 9px;
+        align-self: flex-start;
+        padding: 8px 15px;
+        font-family: 'Space Mono', monospace; font-weight: 700;
+        font-size: 14px; letter-spacing: .17em; text-transform: uppercase;
+        color: var(--cream); background: var(--teal);
+        border: 3px solid var(--choco);
+        border-radius: 999px;
+        box-shadow: 4px 4px 0 var(--choco);
+    }
+
+    .title {
+        margin-top: 24px;
+        font-family: 'Bungee', 'Arial Black', sans-serif;
+        font-size: 62px; line-height: 1.02;
+        text-wrap: balance;
+    }
+
+    .sub {
+        margin-top: 20px;
+        max-width: 28ch;
+        font-size: 25px; line-height: 1.4; font-weight: 600;
+        opacity: .84;
+    }
+
+    .foot {
+        margin-top: auto; margin-bottom: 40px;
+        display: flex; align-items: center; gap: 11px;
+        font-family: 'Space Mono', monospace;
+        font-size: 14px;
+    }
+    .foot__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--tomato); border: 2px solid var(--choco); }
+    .foot__url { font-weight: 700; }
+    .foot__sep { opacity: .45; }
+
+    .photo { position: relative; overflow: hidden; background: var(--choco); }
+    .photo img {
+        width: 100%; height: 100%; object-fit: cover; display: block;
+        /* Variant-specific zoom/focus, set from JS (see `pos` + `zoom` below). */
+        transform: scale(var(--zoom, 1));
+        transform-origin: var(--focus, 50% 50%);
+    }
+    .photo::after {
+        content: ''; position: absolute; inset: 0;
+        box-shadow: inset 14px 0 26px -10px rgba(58, 34, 24, .45);
+    }
+
+    /* Rotated "sticker" -- the one bit of extra personality. Sat in the
+       bottom-right of the panel, straddling the seam into the photo, and
+       clear of the .sub column so the two never collide. */
+    .sticker {
+        position: absolute; left: 498px; bottom: 84px;
+        width: 134px; height: 134px;
+        display: grid; place-items: center; text-align: center;
+        background: var(--mustard);
+        border: 4px solid var(--choco);
+        border-radius: 50%;
+        box-shadow: 6px 6px 0 var(--choco);
+        transform: rotate(-9deg);
+    }
+    .sticker span {
+        font-family: 'Space Mono', monospace; font-weight: 700;
+        font-size: 13px; line-height: 1.32; letter-spacing: .09em; text-transform: uppercase;
+        padding: 0 12px;
+    }
+</style>
+</head>
+<body>
+<div class="card">
+    <div class="panel">
+        <div class="brand">
+            <span class="brand__mark">&#129473;</span>
+            <span>
+                <span class="brand__name">Dessert House</span>
+                <span class="brand__sub">Cloud Bakery Kitchen</span>
+            </span>
+        </div>
+        <p class="eyebrow" id="eyebrow"></p>
+        <h1 class="title" id="title"></h1>
+        <p class="sub" id="sub"></p>
+        <p class="foot">
+            <span class="foot__dot"></span>
+            <span class="foot__url">preetimarandi.github.io/desserthouse</span>
+            <span class="foot__sep">/</span>
+            <span id="slug"></span>
+        </p>
+    </div>
+    <div class="photo"><img id="photo" alt=""></div>
+    <div class="sticker" id="sticker" hidden><span id="sticker-text"></span></div>
+</div>
+
+<script>
+    // The four cards, described in one place. make_og_images.js renders each
+    // key in turn and writes the screenshots to asset/og/.
+    const VARIANTS = {
+        home: {
+            slug: 'index',
+            eyebrow: 'Fresh-baked happiness',
+            title: 'Dessert House',
+            sub: 'Custom cakes, cookies, cinnamon rolls, Korean buns, ice-cream &amp; cheesecakes &mdash; all baked to order.',
+            photo: 'fresh-baked-muffins-croissants.webp',
+            focus: '35% 38%', zoom: 1.55,
+            sticker: 'Baked<br>to order'
+        },
+        about: {
+            slug: 'about',
+            eyebrow: 'Our story',
+            title: 'Preeti Marandi',
+            sub: 'One baker, one oven and a whole lot of butter. The retro cloud kitchen behind Dessert House.',
+            photo: 'founder.webp',
+            focus: '50% 35%', zoom: 1.15,
+            sticker: 'Hi,<br>I&rsquo;m Preeti'
+        },
+        contact: {
+            slug: 'contact',
+            eyebrow: 'Order on WhatsApp',
+            title: 'Let&rsquo;s Bake',
+            sub: 'Tell us the treat and the date, and we&rsquo;ll bring it fresh. Custom orders start with one message.',
+            photo: 'fresh-baked-muffins-croissants.webp',
+            focus: '50% 42%', zoom: 1.25,
+            sticker: 'Order<br>on chat'
+        },
+        legal: {
+            slug: 'terms &middot; privacy',
+            eyebrow: 'The small print',
+            title: 'Terms &amp;<br>Privacy',
+            sub: 'Cancellations, allergens, payments and privacy &mdash; written in plain language, not legal fog.',
+            photo: 'top-view-delicious-pastry-concept.webp',
+            focus: '50% 50%', zoom: 1,
+            sticker: 'Plain<br>English'
+        }
+    };
+
+    const v = VARIANTS[new URLSearchParams(location.search).get('v')] || VARIANTS.home;
+    document.getElementById('eyebrow').textContent = v.eyebrow;
+    document.getElementById('title').innerHTML = v.title;
+    document.getElementById('sub').innerHTML = v.sub;
+    document.getElementById('slug').innerHTML = v.slug;
+
+    const img = document.getElementById('photo');
+    img.src = '../asset/' + v.photo;
+    // The photo column is tall and narrow while the source shots are wide, so
+    // `focus` picks the point held still during the zoom and `zoom` decides
+    // how far in to push. Without it a 3:2 photo crops to its empty middle.
+    img.style.setProperty('--focus', v.focus || '50% 50%');
+    img.style.setProperty('--zoom', v.zoom || 1);
+
+    document.getElementById('sticker').hidden = !v.sticker;
+    if (v.sticker) document.getElementById('sticker-text').innerHTML = v.sticker;
+</script>
+
+</body>
+</html>
